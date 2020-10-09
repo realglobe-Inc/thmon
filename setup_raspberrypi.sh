@@ -9,7 +9,7 @@
 #   pi@raspberrypi$ export SSH_RPFW_PORT=<new hostname>
 #   pi@raspberrypi$ export SSH_RPFW_HOST_KEY=<new hostname>
 #   pi@raspberrypi$ export SSH_RPFW_HOST_KEY_TYPE=<new hostname>
-#   pi@raspberrypi$ curl -s https://raw.githubusercontent.com/realglobe-Inc/co2mon/master/setup_raspberrypi.sh | sh -s
+#   pi@raspberrypi$ curl -s https://raw.githubusercontent.com/realglobe-Inc/thmon/master/setup_raspberrypi.sh | sh -s
 #
 
 set -eu
@@ -292,16 +292,16 @@ EOF
 #modules-load=dwc2,g_ether console=serial0,115200 console=tty1 root=PARTUUID=738a4d67-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
 #EOF
 
-# co2mon
-sudo tee /etc/systemd/system/co2mon.service > /dev/null <<'EOF'
+# thmon
+sudo tee /etc/systemd/system/thmon.service > /dev/null <<'EOF'
 [Unit]
-Description=co2mon container service
+Description=thmon container service
 After=network.target auditd.service
 
 [Service]
 #WorkingDirectory=/workdir
-ExecStart=docker run --privileged --rm -v /var/local/co2mon:/var/local/co2mon --name co2mon co2mon /sbin/init
-ExecStop=docker stop co2mon
+ExecStart=docker run --privileged --rm -v /var/local/thmon:/var/local/thmon --name thmon thmon /sbin/init
+ExecStop=docker stop thmon
 Restart=always
 RestartSec=1
 StartLimitBurst=0
@@ -309,7 +309,7 @@ StartLimitBurst=0
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo systemctl enable co2mon.service
+sudo systemctl enable thmon.service
 
 # ホスト名の設定
 sudo raspi-config nonint do_hostname "${NEW_HOSTNAME}"

@@ -17,25 +17,25 @@ Docker.appの設定から、`Command Line > Enable Experimental features`を有�
 ## DockerイメージをRaspberryPiに転送する
 
 ```sh
-docker image save co2mon | ssh cm01.local docker image load
+docker image save thmon | ssh cm01.local docker image load
 ```
 
 **ビルドして転送**
 
 ```sh
-./docker_build.sh && (docker image save co2mon | pv | ssh cm01.local docker image load)
+./docker_build.sh && (docker image save thmon | pv | ssh cm01.local docker image load)
 ```
 
 ## コンテナの起動
 
 ```sh
-docker run -d --privileged --rm -v /var/local/co2mon:/var/local/co2mon --name co2mon co2mon /sbin/init
+docker run -d --privileged --rm -v /var/local/thmon:/var/local/thmon --name thmon thmon /sbin/init
 ```
 
 **ビルドして転送して起動**
 
 ```
-./docker_build.sh && (docker image save co2mon | pv | ssh cm01.local docker image load) && ssh cm01.local 'docker stop co2mon; docker run -d --privileged --rm -v /var/local/co2mon:/var/local/co2mon --name co2mon co2mon /sbin/init'
+./docker_build.sh && (docker image save thmon | pv | ssh cm01.local docker image load) && ssh cm01.local 'docker stop thmon; docker run -d --privileged --rm -v /var/local/thmon:/var/local/thmon --name thmon thmon /sbin/init'
 ```
 
 または,
@@ -47,13 +47,13 @@ docker run -d --privileged --rm -v /var/local/co2mon:/var/local/co2mon --name co
 ## コンテナのシェルを開く
 
 ```sh
-docker exec -it co2mon /bin/bash --login
+docker exec -it thmon /bin/bash --login
 ```
 
 ## ホスト用のserviceファイルを転送する
 
 ```sh
-(ssh cm01.local 'sudo tee /etc/systemd/system/co2mon.service') < co2mon.service
+(ssh cm01.local 'sudo tee /etc/systemd/system/thmon.service') < thmon.service
 ```
 
 ## RPi上のDATAディレクトリからローカルに同期する
@@ -67,7 +67,7 @@ docker exec -it co2mon /bin/bash --login
 ## send_graph.sh 単体をローカルでデバッグ
 
 ```sh
-./docker_build.sh && (docker run --rm -v $(pwd)/TMP:/workdir/TMP -v $(pwd)/DATA:/var/local/co2mon/DATA co2mon sh -x /workdir/app/send_graph.sh)
+./docker_build.sh && (docker run --rm -v $(pwd)/TMP:/workdir/TMP -v $(pwd)/DATA:/var/local/thmon/DATA thmon sh -x /workdir/app/send_graph.sh)
 ```
 
 ## デバイスの紐付け
@@ -79,7 +79,7 @@ docker exec -it co2mon /bin/bash --login
 RPi上で実行する場合は、
 
 ```sh
-docker run --rm -v /var/local/co2mon:/var/local/co2mon co2mon sh -c '/workdir/app/get_endpoint_info.sh https://demo.hec-eye.jp/a/XXXXXXXXXXXXXX > /var/local/co2mon/DATA/endpoint_info'
+docker run --rm -v /var/local/thmon:/var/local/thmon thmon sh -c '/workdir/app/get_endpoint_info.sh https://demo.hec-eye.jp/a/XXXXXXXXXXXXXX > /var/local/thmon/DATA/endpoint_info'
 ```
 
 
@@ -90,10 +90,10 @@ docker run --rm -v /var/local/co2mon:/var/local/co2mon co2mon sh -c '/workdir/ap
 ```
 
 RPi上で実行する場合は、
-`/var/local/co2mon/DATA/location`に`lat,lng,alt`の形式で書き込む
+`/var/local/thmon/DATA/location`に`lat,lng,alt`の形式で書き込む
 
 ```sh
-echo '35.73237,139.76728,0' | sudo tee /var/local/co2mon/DATA/location
+echo '35.73237,139.76728,0' | sudo tee /var/local/thmon/DATA/location
 ```
 
 ## Dockerコンテナにps,pingなどをいれる

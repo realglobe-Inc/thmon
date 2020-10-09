@@ -3,7 +3,7 @@
 echo "read_gps.sh started" >&2
 
 # rotateは別プロセスで
-log_dir="/var/local/co2mon/DATA/log"
+log_dir="/var/local/thmon/DATA/log"
 log="${log_dir}/gps_tpv"
 
 mkdir -p "${log_dir}"

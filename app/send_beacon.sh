@@ -29,7 +29,7 @@ tmp="$(mktemp -d)"
 curl -h > /dev/null 2>&1 || error 'curl が見つかりません'
 jq -h > /dev/null 2>&1 || error 'jq が見つかりません'
 
-endpoint_info="/var/local/co2mon/DATA/endpoint_info"
+endpoint_info="/var/local/thmon/DATA/endpoint_info"
 info_url="$(cat "${endpoint_info}" | grep '^infoUrl: ' | cut -d ' ' -f 2 | tr -d '\r')"
 type="$(cat "${endpoint_info}" | grep '^type: ' | cut -d ' ' -f 2 | tr -d '\r')"
 token="$(cat "${endpoint_info}" | grep '^token: ' | cut -d ' ' -f 2 | tr -d '\r')"
@@ -37,15 +37,15 @@ if [ -z "${info_url}" ] || [ -z "${token}" ]; then
   error 'endpoint_info が正しくありません'
 fi
 
-co2="$(tail -n 1 /var/local/co2mon/DATA/log/co2/latest | cut -d ' ' -f 2 | cut -d '=' -f 2 | cut -d ';' -f 1 | tr -d '\r')"
-if tail -n 1 /var/local/co2mon/DATA/log/gps_tpv | grep '.'; then
-  lat="$(tail -n 1 /var/local/co2mon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .lat)"
-  lng="$(tail -n 1 /var/local/co2mon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .lon)"
-  lat="$(tail -n 1 /var/local/co2mon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .alt)"
-elif cat /var/local/co2mon/DATA/location | grep '.'; then
-  lat="$(cat /var/local/co2mon/DATA/location | cut -d ',' -f 1)"
-  lng="$(cat /var/local/co2mon/DATA/location | cut -d ',' -f 2)"
-  alt="$(cat /var/local/co2mon/DATA/location | cut -d ',' -f 3)"
+co2="$(tail -n 1 /var/local/thmon/DATA/log/co2/latest | cut -d ' ' -f 2 | cut -d '=' -f 2 | cut -d ';' -f 1 | tr -d '\r')"
+if tail -n 1 /var/local/thmon/DATA/log/gps_tpv | grep '.'; then
+  lat="$(tail -n 1 /var/local/thmon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .lat)"
+  lng="$(tail -n 1 /var/local/thmon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .lon)"
+  lat="$(tail -n 1 /var/local/thmon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .alt)"
+elif cat /var/local/thmon/DATA/location | grep '.'; then
+  lat="$(cat /var/local/thmon/DATA/location | cut -d ',' -f 1)"
+  lng="$(cat /var/local/thmon/DATA/location | cut -d ',' -f 2)"
+  alt="$(cat /var/local/thmon/DATA/location | cut -d ',' -f 3)"
 else
   lat="0"
   lng="0"

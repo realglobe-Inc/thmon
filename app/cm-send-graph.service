@@ -1,9 +1,9 @@
 [Unit]
-Description=co2mon graph sending service
+Description=thmon graph sending service
 After=network.target auditd.service cm-read.service
 
 [Service]
-#EnvironmentFile=/var/local/co2mon/DATA/conf
+#EnvironmentFile=/var/local/thmon/DATA/conf
 WorkingDirectory=/workdir
 ExecStart=/workdir/app/send_graph_d.sh
 Restart=always

@@ -1,5 +1,5 @@
 [Unit]
-Description=co2mon read service
+Description=thmon read service
 After=network.target auditd.service
 
 [Service]

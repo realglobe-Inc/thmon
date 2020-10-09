@@ -1,5 +1,5 @@
 [Unit]
-Description=co2mon GPS reading service
+Description=thmon GPS reading service
 After=network.target auditd.service
 
 [Service]

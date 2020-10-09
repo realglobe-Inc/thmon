@@ -1,4 +1,4 @@
-# co2mon
+# thmon
 
 Hec-EyeにつながるCO2モニタ
 
@@ -25,7 +25,7 @@ microSDの書き込み
 ```
 export GITHUB_USERNAME=<your username>
 export NEW_HOSTNAME=<new hostname>
-curl -s https://raw.githubusercontent.com/realglobe-Inc/co2mon/master/setup_raspberrypi.sh | sh -s
+curl -s https://raw.githubusercontent.com/realglobe-Inc/thmon/master/setup_raspberrypi.sh | sh -s
 ```
 
 ### アプリケーションのデプロイ

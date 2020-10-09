@@ -2,7 +2,7 @@
 
 set -eu
 
-DATA="/var/local/co2mon/DATA"
+DATA="/var/local/thmon/DATA"
 ENDPOINT_INFO="${DATA}/endpoint_info"
 
 on_exit() {

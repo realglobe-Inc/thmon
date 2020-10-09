@@ -2,7 +2,7 @@
 
 set -eu
 
-DATA="/var/local/co2mon/DATA"
+DATA="/var/local/thmon/DATA"
 LOCATION="${DATA}/location"
 
 on_exit() {

@@ -1,9 +1,9 @@
 [Unit]
-Description=co2mon beacon sending service
+Description=thmon beacon sending service
 After=network.target auditd.service cm-read.service cm-read-gps.service
 
 [Service]
-#EnvironmentFile=/var/local/co2mon/DATA/conf
+#EnvironmentFile=/var/local/thmon/DATA/conf
 WorkingDirectory=/workdir
 ExecStart=/workdir/app/send_beacon_d.sh
 Restart=always
