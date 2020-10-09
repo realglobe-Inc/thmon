@@ -3,7 +3,7 @@
 echo "read.sh started" >&2
 
 # rotateは別プロセスで
-log_dir="/var/local/thmon/DATA/log/co2"
+log_dir="/var/local/thmon/DATA/log/th"
 log="${log_dir}/latest"
 
 mkdir -p "${log_dir}"

@@ -37,7 +37,7 @@ if [ -z "${info_url}" ] || [ -z "${token}" ]; then
   error 'endpoint_info が正しくありません'
 fi
 
-co2="$(tail -n 1 /var/local/thmon/DATA/log/co2/latest | cut -d ' ' -f 2 | cut -d '=' -f 2 | cut -d ';' -f 1 | tr -d '\r')"
+th="$(tail -n 1 /var/local/thmon/DATA/log/th/latest | cut -d ' ' -f 2 | cut -d '=' -f 2 | cut -d ';' -f 1 | tr -d '\r')"
 if tail -n 1 /var/local/thmon/DATA/log/gps_tpv | grep '.'; then
   lat="$(tail -n 1 /var/local/thmon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .lat)"
   lng="$(tail -n 1 /var/local/thmon/DATA/log/gps_tpv | cut -d ' ' -f 2 | jq -r .lon)"
@@ -54,7 +54,7 @@ fi
 
 printf '{"lat": %s, "lng": %s, "alt": %s}\n' "${lat}" "${lng}" "${alt}" |
   jq --arg type "default" '. + {"type": $type}' |
-  jq --arg co2 "${co2}" '. + {"additional": {"info": {"co2": $co2}}}' |
+  jq --arg th "${th}" '. + {"additional": {"info": {"th": $th}}}' |
   curl -s -w '\n' -H "Content-type: application/json" -d @- "${info_url}?token=${token}"
 
 # ここで通常の終了処理

@@ -43,12 +43,12 @@ if [ -z "${image_url}" ] || [ -z "${token}" ]; then
 fi
 
 ## 過去6時間ぶんのCO2濃度履歴を取得する
-tail -n 22000 /var/local/thmon/DATA/log/co2/latest |
+tail -n 22000 /var/local/thmon/DATA/log/th/latest |
   awk -v pt="$((date - 21600))" '$1 > pt' |
-  sed 's/ co2=/ /g' > "${tmp}"/co2_last_6h.timet_ppm
-cut -d ' ' -f 1 < "${tmp}"/co2_last_6h.timet_ppm | TZ="JST-9" /workdir/app/utconv -r > "${tmp}"/co2_last_6h.jstdate
-cut -d ' ' -f 2 < "${tmp}"/co2_last_6h.timet_ppm > "${tmp}"/co2_last_6h.ppm
-paste "${tmp}"/co2_last_6h.jstdate "${tmp}"/co2_last_6h.ppm > "${tmp}"/co2_last_6h.jstdate_ppm
+  sed 's/ th=/ /g' > "${tmp}"/th_last_6h.timet_ppm
+cut -d ' ' -f 1 < "${tmp}"/th_last_6h.timet_ppm | TZ="JST-9" /workdir/app/utconv -r > "${tmp}"/th_last_6h.jstdate
+cut -d ' ' -f 2 < "${tmp}"/th_last_6h.timet_ppm > "${tmp}"/th_last_6h.ppm
+paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.ppm > "${tmp}"/th_last_6h.jstdate_ppm
 
 ## グラフを描画する
 tail_date_t="${date}"
@@ -78,7 +78,7 @@ set yrange [300:2000]
 # PNGの描画
 set terminal pngcairo size 1024,768 font 'Verdana,22'
 set output '${tmp}/graph.png'
-plot '${tmp}/co2_last_6h.jstdate_ppm' using 1:2 with lines lc '#0000ff'
+plot '${tmp}/th_last_6h.jstdate_ppm' using 1:2 with lines lc '#0000ff'
 EOF
 
 cp "${tmp}"/graph.png /var/local/thmon/DATA/graph.png

@@ -1,11 +1,11 @@
 [Unit]
-Description=co2mon container service
+Description=thmon container service
 After=network.target auditd.service
 
 [Service]
 #WorkingDirectory=/workdir
-ExecStart=docker run --privileged --rm -v /var/local/co2mon:/var/local/co2mon --name co2mon co2mon /sbin/init
-ExecStop=docker stop co2mon
+ExecStart=docker run --privileged --rm -v /var/local/thmon:/var/local/thmon --name thmon thmon /sbin/init
+ExecStop=docker stop thmon
 Restart=always
 RestartSec=1
 StartLimitBurst=0
