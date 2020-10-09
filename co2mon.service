@@ -1,0 +1,14 @@
+[Unit]
+Description=co2mon container service
+After=network.target auditd.service
+
+[Service]
+#WorkingDirectory=/workdir
+ExecStart=docker run --privileged --rm -v /var/local/co2mon:/var/local/co2mon --name co2mon co2mon /sbin/init
+ExecStop=docker stop co2mon
+Restart=always
+RestartSec=1
+StartLimitBurst=0
+
+[Install]
+WantedBy=multi-user.target

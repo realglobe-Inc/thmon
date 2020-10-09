@@ -1,0 +1,14 @@
+[Unit]
+Description=co2mon beacon sending service
+After=network.target auditd.service cm-read.service cm-read-gps.service
+
+[Service]
+#EnvironmentFile=/var/local/co2mon/DATA/conf
+WorkingDirectory=/workdir
+ExecStart=/workdir/app/send_beacon_d.sh
+Restart=always
+RestartSec=1
+StartLimitBurst=0
+
+[Install]
+WantedBy=multi-user.target

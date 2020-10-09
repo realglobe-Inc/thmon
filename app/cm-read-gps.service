@@ -1,0 +1,13 @@
+[Unit]
+Description=co2mon GPS reading service
+After=network.target auditd.service
+
+[Service]
+WorkingDirectory=/workdir
+ExecStart=/workdir/app/read_gps.sh
+Restart=always
+RestartSec=1
+StartLimitBurst=0
+
+[Install]
+WantedBy=multi-user.target

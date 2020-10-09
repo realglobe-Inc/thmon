@@ -1,0 +1,11 @@
+[Unit]
+Description=GPS (Global Positioning System) Daemon
+# Needed with chrony SOCK refclock
+After=chronyd.service
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/gpsd -F /var/run/gpsd.sock /dev/ttyUSB0
+
+[Install]
+WantedBy=multi-user.target
