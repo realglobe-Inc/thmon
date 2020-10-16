@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND noninteractive
 COPY ./app/sources.list /etc/apt/sources.list
 RUN apt-get -y update && \
     apt-get -y install systemd && \
-    apt-get -y install --no-install-recommends jq ca-certificates curl gpsd gnuplot-nox fonts-droid-fallback fonts-noto-mono && \
+    apt-get -y install jq ca-certificates curl gpsd gnuplot-nox fonts-droid-fallback fonts-noto-mono && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
