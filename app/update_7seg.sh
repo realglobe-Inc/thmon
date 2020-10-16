@@ -25,8 +25,13 @@ tmp="$(mktemp -d)"
 
 stty -F "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0" raw 9600
 
-th="$(tail -n 1 /var/local/thmon/DATA/log/th/latest | cut -d ' ' -f 2 | cut -d '=' -f 2 | cut -d ';' -f 1 | tr -d '\r')"
-echo $th |tee "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0"
+th="$(tail -n 1 /var/local/thmon/DATA/log/th/latest |
+  cut -d ' ' -f 2 |
+  tr -d '\r' |
+  sed -n 's/\(^.*\)\(th=\)\([0-9][0-9]*\)\(.*$\)/\3/p')"
+if [ -n "${th}" ]; then
+  echo $th > "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0"
+fi
 
 # ここで通常の終了処理
 on_exit

@@ -44,8 +44,9 @@ fi
 
 ## 過去6時間ぶんのCO2濃度履歴を取得する
 tail -n 22000 /var/local/thmon/DATA/log/th/latest |
+  tr -d '\r' |
   awk -v pt="$((date - 21600))" '$1 > pt' |
-  sed 's/ th=/ /g' > "${tmp}"/th_last_6h.timet_ppm
+  sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(th=\)\([0-9][0-9]*\)\(.*$\)/\1 \4/p' > "${tmp}"/th_last_6h.timet_ppm
 cut -d ' ' -f 1 < "${tmp}"/th_last_6h.timet_ppm | TZ="JST-9" /workdir/app/utconv -r > "${tmp}"/th_last_6h.jstdate
 cut -d ' ' -f 2 < "${tmp}"/th_last_6h.timet_ppm > "${tmp}"/th_last_6h.ppm
 paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.ppm > "${tmp}"/th_last_6h.jstdate_ppm
