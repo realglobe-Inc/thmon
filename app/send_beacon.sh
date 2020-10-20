@@ -40,7 +40,7 @@ fi
 th="$(tail -n 1 /var/local/thmon/DATA/log/th/latest |
   cut -d ' ' -f 2 |
   tr -d '\r' |
-  sed -n 's/\(^.*\)\(th=\)\([0-9][0-9]*\)\(.*$\)/\3/p')"
+  sed -n 's/\(^.*\)\(temp=\)\([0-9][0-9]*\)\(.*$\)/\3/p')"
 latest_gps_tpv="$(tail -n 10800 /var/local/thmon/DATA/log/gps_tpv |
   cut -f 2- -d ' ' |
   jq -c 'select(.lat != null and .lon != null)' |
