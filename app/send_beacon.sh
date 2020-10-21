@@ -37,10 +37,14 @@ if [ -z "${info_url}" ] || [ -z "${token}" ]; then
   error 'endpoint_info が正しくありません'
 fi
 
-th="$(tail -n 1 /var/local/thmon/DATA/log/th/latest |
+temp="$(tail -n 1 /var/local/thmon/DATA/log/th/latest |
   cut -d ' ' -f 2 |
   tr -d '\r' |
   sed -n 's/\(^.*\)\(temp=\)\([0-9][0-9]*\)\(.*$\)/\3/p')"
+hum="$(tail -n 1 /var/local/thmon/DATA/log/th/latest |
+  cut -d ' ' -f 2 |
+  tr -d '\r' |
+  sed -n 's/\(^.*\)\(hum=\)\([0-9][0-9]*\)\(.*$\)/\3/p')"
 latest_gps_tpv="$(tail -n 10800 /var/local/thmon/DATA/log/gps_tpv |
   cut -f 2- -d ' ' |
   jq -c 'select(.lat != null and .lon != null)' |
@@ -61,7 +65,7 @@ fi
 
 printf '{"lat": %s, "lng": %s, "alt": %s}\n' "${lat}" "${lng}" "${alt}" |
   jq --arg type "default" '. + {"type": $type}' |
-  jq --arg th "${th}" '. + {"additional": {"info": {"th": $th}}}' |
+  jq --arg temp "${temp}" --arg hum "${hum}" '. + {"additional": {"info": {"temp": $temp, "hum": $hum}}}' |
   curl -s -w '\n' -H "Content-type: application/json" -d @- "${info_url}?token=${token}"
 
 # ここで通常の終了処理
