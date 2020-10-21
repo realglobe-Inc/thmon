@@ -47,10 +47,8 @@ tail -n 22000 /var/local/thmon/DATA/log/th/latest |
   tr -d '\r' |
   awk -v pt="$((date - 21600))" '$1 > pt' > "${tmp}"/th_last_6h
 cut -d ' ' -f 1 < "${tmp}"/th_last_6h | TZ="JST-9" /workdir/app/utconv -r > "${tmp}"/th_last_6h.jstdate
-sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(temp=\)\([0-9][0-9]*\)\(.*$\)/\4/p' < "${tmp}"/th_last_6h > "${tmp}"/th_last_6h.temp
-sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(hum=\)\([0-9][0-9]*\)\(.*$\)/\1 \4/p' < "${tmp}"/th_last_6h > "${tmp}"/th_last_6h.hum
-paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.temp "${tmp}"/th_last_6h.hum > "${tmp}"/th_last_6h.jstdate_temp_hum
-paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.temp > "${tmp}"/th_last_6h.jstdate_temp
+sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(temp=\)\([0-9][0-9]*\)\(.*\)\(hum=\)\([0-9][0-9]*\)\(.*$\)/\4 \7/p' < "${tmp}"/th_last_6h > "${tmp}"/th_last_6h.temp_hum
+paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.temp_hum > "${tmp}"/th_last_6h.jstdate_temp_hum
 
 ## グラフを描画する
 tail_date_t="${date}"
@@ -81,7 +79,7 @@ set yrange [0000:10000]
 # PNGの描画
 set terminal pngcairo size 1024,768 font 'Verdana,22'
 set output '${tmp}/graph.png'
-plot '${tmp}/th_last_6h.jstdate_temp' using 1:2 with lines lc '#0000ff'
+plot '${tmp}/th_last_6h.jstdate_temp_hum' using 1:2 with lines lc '#0000ff'
 EOF
 
 cp "${tmp}"/graph.png /var/local/thmon/DATA/graph.png
