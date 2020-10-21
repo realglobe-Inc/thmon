@@ -47,10 +47,8 @@ tail -n 22000 /var/local/thmon/DATA/log/th/latest |
   tr -d '\r' |
   awk -v pt="$((date - 21600))" '$1 > pt' > "${tmp}"/th_last_6h
 cut -d ' ' -f 1 < "${tmp}"/th_last_6h | TZ="JST-9" /workdir/app/utconv -r > "${tmp}"/th_last_6h.jstdate
-sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(temp=\)\([0-9][0-9]*\)\(.*$\)/\4/p' < "${tmp}"/th_last_6h > "${tmp}"/th_last_6h.temp
-sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(hum=\)\([0-9][0-9]*\)\(.*$\)/\1 \4/p' < "${tmp}"/th_last_6h > "${tmp}"/th_last_6h.hum
-paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.temp "${tmp}"/th_last_6h.hum > "${tmp}"/th_last_6h.jstdate_temp_hum
-paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.temp > "${tmp}"/th_last_6h.jstdate_temp
+sed -n 's/\(^[0-9][0-9]*\)\(.*\)\(temp=\)\([0-9][0-9]*\)\(.*\)\(hum=\)\([0-9][0-9]*\)\(.*$\)/\4 \7/p' < "${tmp}"/th_last_6h > "${tmp}"/th_last_6h.temp_hum
+paste "${tmp}"/th_last_6h.jstdate "${tmp}"/th_last_6h.temp_hum > "${tmp}"/th_last_6h.jstdate_temp_hum
 
 ## グラフを描画する
 tail_date_t="${date}"
@@ -67,7 +65,6 @@ title="$(printf '%s のCO2濃度\\n(%s/%s/%s %s時現在, 過去6時間)' "${nam
 gnuplot -p <<EOF
 # 共通の設定
 set title "${title}"
-set nokey
 set timefmt "%Y%m%d%H%M%S"
 #set datafile separator whitespace
 # x軸の設定
@@ -76,12 +73,17 @@ set xdata time
 set xrange ["${head_date}":"${tail_date}"]
 set xtics "${head_date}", 3600
 # y軸の設定
-set ylabel '温湿度(°/%)'
-set yrange [0000:10000]
+set ytics nomirror
+set ylabel '温度(°)'
+set yrange [0000:5000]
+set y2tics
+set y2label '湿度(%)'
+set y2range [0000:10000]
 # PNGの描画
 set terminal pngcairo size 1024,768 font 'Verdana,22'
 set output '${tmp}/graph.png'
-plot '${tmp}/th_last_6h.jstdate_temp' using 1:2 with lines lc '#0000ff'
+plot '${tmp}/th_last_6h.jstdate_temp_hum' using 1:2 axis x1y1 with lines lc '#0000ff' title "温度",\
+     '${tmp}/th_last_6h.jstdate_temp_hum' using 1:3 axis x1y2 with lines lc '#ff0000' title "湿度"
 EOF
 
 cp "${tmp}"/graph.png /var/local/thmon/DATA/graph.png
